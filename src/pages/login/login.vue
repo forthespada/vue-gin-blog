@@ -13,13 +13,13 @@
                 <span class='svg-container'>
                     <svg-icon icon-class='password'></svg-icon>
                 </span>
-        <el-input name='password' :type='pwdType' @keyup.enter.native='login' v-model='loginForm.password'
+        <el-input name='password' :type='pwdType' @keyup.enter.native='handleClickLoginBtn' v-model='loginForm.password'
                   autoComplete='on'
                   placeholder='password'></el-input>
         <span class='show-pwd' @click='showPwd'><svg-icon icon-class='eye' /></span>
       </el-form-item>
       <el-form-item>
-        <el-button type='primary' style='width:100%;' :loading='loading' @click.native.prevent='login'>
+        <el-button type='primary' style='width:100%;' :loading='loading' @click.native.prevent='handleClickLoginBtn'>
           Sign in
         </el-button>
       </el-form-item>
@@ -30,6 +30,7 @@
 
 <script>
 import { login } from '@/api/permission'
+import userApi from '@/api/user'
 
 export default {
   data() {
@@ -54,15 +55,23 @@ export default {
         this.pwdType = 'password'
       }
     },
-    async login() {
-      try {
-        let data = await login(this.loginForm)
-        let token = data.token
-        this.$store.commit('LOGIN_IN', token)
+    // async login() {
+    //   try {
+    //     let data = await login(this.loginForm)
+    //     let token = data.token
+    //     this.$store.commit('LOGIN_IN', token)
+    //     this.$router.replace('/')
+    //   } catch (e) {
+    //     console.log(e)
+    //   }
+    // },
+    handleClickLoginBtn() {
+      userApi.login(this.loginForm).then((data) => {
+        this.$store.commit('LOGIN_IN', data.token)
         this.$router.replace('/')
-      } catch (e) {
-        console.log(e)
-      }
+      }).catch(err => {
+        console.log(">>>login error" + err.toString())
+      })
     },
     validatePass(rule, value, callback) {
       if (value.length < 5) {

@@ -13,12 +13,9 @@ export default {
     TotalStatus
   },
   data() {
-    return {
-
-    }
+    return {}
   },
   mounted() {
-
   }
 }
 </script>
